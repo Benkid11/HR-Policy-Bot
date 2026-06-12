@@ -3,7 +3,7 @@
 This repository contains two main components for an HR support experience:
 
 1. `index.html` — a standalone web-based HR assistant interface.
-2. `UPL HR BOT.json` — an n8n workflow that powers the HR assistant with AI, vector search, memory, and document ingestion.
+2. `HR BOT.json` — an n8n workflow that powers the HR assistant with AI, vector search, memory, and document ingestion.
 
 ---
 
