@@ -1,4 +1,4 @@
-# Upperlink HR Assistant
+# HR Assistant
 
 This repository contains two main components for an HR support experience:
 
