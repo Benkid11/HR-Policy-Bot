@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HR Assistant — Upperlink Limited</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --ul-blue-900: #0a1f4e;
+        --ul-blue-800: #0d2a6b;
+        --ul-blue-700: #1240a0;
+        --ul-blue-600: #1a55cc;
+        --ul-blue-500: #2163e8;
+        --ul-blue-400: #4d83f0;
+        --ul-blue-100: #dce8fd;
+        --ul-blue-50: #eef4ff;
+
+        --white: #ffffff;
+        --gray-50: #f7f8fc;
+        --gray-100: #eef0f6;
+        --gray-200: #dde0ec;
+        --gray-300: #c2c7d8;
+        --gray-400: #8f96b0;
+        --gray-500: #5e6480;
+        --gray-700: #2d3354;
+        --gray-900: #12152b;
+
+        --success: #16a34a;
+        --success-bg: #dcfce7;
+        --error: #dc2626;
+        --error-bg: #fee2e2;
+
+        --shadow-sm:
+          0 1px 3px rgba(10, 31, 78, 0.08), 0 1px 2px rgba(10, 31, 78, 0.04);
+        --shadow-md:
+          0 4px 12px rgba(10, 31, 78, 0.1), 0 2px 4px rgba(10, 31, 78, 0.06);
+        --shadow-lg:
+          0 8px 30px rgba(10, 31, 78, 0.12), 0 4px 8px rgba(10, 31, 78, 0.06);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+
+        --font: "Plus Jakarta Sans", system-ui, sans-serif;
+        --transition: 0.18s ease;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: var(--font);
+        background: var(--gray-50);
+        color: var(--gray-900);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--white);
+        box-shadow: var(--shadow-lg);
+        position: relative;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--gray-100);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 10;
+      }
+      .topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-logo {
+        height: 32px;
+        width: auto;
+        display: block;
+      }
+      .topbar-divider {
+        width: 1px;
+        height: 24px;
+        background: var(--gray-200);
+      }
+      .topbar-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-500);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--success-bg);
+        color: var(--success);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 20px;
+      }
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--success);
+        animation: pulse-dot 2s ease-in-out infinite;
+      }
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+
+      .agent-strip {
+        background: linear-gradient(
+          135deg,
+          var(--ul-blue-900) 0%,
+          var(--ul-blue-700) 100%
+        );
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+      }
+      .agent-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        backdrop-filter: blur(8px);
+      }
+      .agent-avatar svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .agent-info {
+        flex: 1;
+      }
+      .agent-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.2px;
+      }
+      .agent-desc {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.65);
+        margin-top: 2px;
+        font-weight: 400;
+      }
+      .agent-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .agent-tag {
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 3px 9px;
+        border-radius: 20px;
+        letter-spacing: 0.02em;
+      }
+
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px 24px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        scroll-behavior: smooth;
+      }
+      .messages::-webkit-scrollbar {
+        width: 4px;
+      }
+      .messages::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .messages::-webkit-scrollbar-thumb {
+        background: var(--gray-200);
+        border-radius: 4px;
+      }
+
+      .welcome {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 32px 16px 8px;
+        animation: fade-up 0.4s ease forwards;
+      }
+      .welcome-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--ul-blue-50);
+        border: 1px solid var(--ul-blue-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .welcome-icon svg {
+        width: 28px;
+        height: 28px;
+        fill: none;
+        stroke: var(--ul-blue-600);
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .welcome h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--gray-900);
+        letter-spacing: -0.3px;
+        margin-bottom: 8px;
+      }
+      .welcome p {
+        font-size: 14px;
+        color: var(--gray-500);
+        line-height: 1.65;
+        max-width: 360px;
+      }
+      .quick-prompts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .quick-prompt {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gray-700);
+        cursor: pointer;
+        transition: all var(--transition);
+      }
+      .quick-prompt:hover {
+        border-color: var(--ul-blue-400);
+        color: var(--ul-blue-600);
+        background: var(--ul-blue-50);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .msg-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+        animation: fade-up 0.25s ease forwards;
+        opacity: 0;
+      }
+      .msg-row.user {
+        flex-direction: row-reverse;
+      }
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .msg-avatar-sm {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 13px;
+      }
+      .msg-row.bot .msg-avatar-sm {
+        background: var(--ul-blue-50);
+        border: 1px solid var(--ul-blue-100);
+      }
+      .msg-row.user .msg-avatar-sm {
+        background: var(--ul-blue-600);
+      }
+      .msg-avatar-sm svg {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .msg-row.bot .msg-avatar-sm svg {
+        stroke: var(--ul-blue-600);
+      }
+      .msg-row.user .msg-avatar-sm svg {
+        stroke: #fff;
+      }
+
+      .bubble {
+        max-width: 76%;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.65;
+        font-weight: 400;
+        position: relative;
+      }
+      .msg-row.bot .bubble {
+        background: var(--white);
+        border: 1px solid var(--gray-100);
+        border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+        color: var(--gray-900);
+        box-shadow: var(--shadow-sm);
+      }
+      .msg-row.user .bubble {
+        background: var(--ul-blue-600);
+        border-radius: var(--radius-lg) var(--radius-lg) 4px var(--radius-lg);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(33, 99, 232, 0.3);
+      }
+      .bubble.error {
+        background: var(--error-bg);
+        border-color: rgba(220, 38, 38, 0.2);
+        color: var(--error);
+      }
+
+      /* ── Section list styles ── */
+      .section-intro {
+        font-size: 13.5px;
+        color: var(--gray-500);
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
+      .section-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+      .section-item {
+        border: 1px solid var(--gray-100);
+        border-left: 3px solid var(--ul-blue-500);
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: var(--gray-50);
+      }
+      .section-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--ul-blue-500);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 4px;
+      }
+      .section-body {
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--gray-700);
+      }
+
+      .typing-dots {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 2px;
+      }
+      .typing-dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ul-blue-400);
+        animation: bounce-dot 1.3s infinite ease-in-out;
+      }
+      .typing-dots span:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .typing-dots span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes bounce-dot {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.4;
+        }
+        30% {
+          transform: translateY(-6px);
+          opacity: 1;
+        }
+      }
+
+      .date-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 11.5px;
+        color: var(--gray-400);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .date-divider::before,
+      .date-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--gray-100);
+      }
+
+      .input-area {
+        padding: 16px 24px 20px;
+        background: var(--white);
+        border-top: 1px solid var(--gray-100);
+        flex-shrink: 0;
+      }
+      .input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--gray-50);
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-xl);
+        padding: 10px 10px 10px 18px;
+        transition:
+          border-color var(--transition),
+          box-shadow var(--transition);
+      }
+      .input-wrap:focus-within {
+        border-color: var(--ul-blue-400);
+        background: var(--white);
+        box-shadow: 0 0 0 3px rgba(33, 99, 232, 0.1);
+      }
+      textarea {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: var(--font);
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--gray-900);
+        line-height: 1.5;
+        resize: none;
+        min-height: 24px;
+        max-height: 120px;
+        padding: 0;
+      }
+      textarea::placeholder {
+        color: var(--gray-400);
+      }
+
+      .send-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--ul-blue-600);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition:
+          background var(--transition),
+          transform 0.1s,
+          box-shadow var(--transition);
+        box-shadow: 0 2px 8px rgba(33, 99, 232, 0.35);
+      }
+      .send-btn:hover:not(:disabled) {
+        background: var(--ul-blue-700);
+        box-shadow: 0 4px 14px rgba(33, 99, 232, 0.4);
+      }
+      .send-btn:active:not(:disabled) {
+        transform: scale(0.93);
+      }
+      .send-btn:disabled {
+        background: var(--gray-200);
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+      .send-btn svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+        transition: fill var(--transition);
+      }
+      .send-btn:disabled svg {
+        fill: var(--gray-400);
+      }
+
+      .input-hint {
+        margin-top: 10px;
+        font-size: 11.5px;
+        color: var(--gray-400);
+        text-align: center;
+      }
+
+      @media (max-width: 600px) {
+        .topbar {
+          padding: 0 16px;
+        }
+        .agent-strip {
+          padding: 14px 16px;
+        }
+        .agent-tags {
+          display: none;
+        }
+        .messages {
+          padding: 16px 16px 8px;
+        }
+        .input-area {
+          padding: 12px 16px 16px;
+        }
+        .bubble {
+          max-width: 88%;
+          font-size: 13.5px;
+        }
+        .topbar-label {
+          display: none;
+        }
+        .topbar-divider {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="topbar-brand">
+          <img
+            src="https://res.cloudinary.com/dzwqiw0nl/image/upload/v1776246329/Upperlink_Logo_m2nmca.png"
+            alt="Upperlink Limited"
+            class="topbar-logo"
+          />
+          <div class="topbar-divider"></div>
+          <span class="topbar-label">HR Portal</span>
+        </div>
+        <div class="topbar-right">
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            Online
+          </div>
+        </div>
+      </header>
+
+      <div class="agent-strip">
+        <div class="agent-avatar">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="agent-info">
+          <div class="agent-name">HR Assistant</div>
+          <div class="agent-desc">
+            Powered by Upperlink AI · Policy knowledge base
+          </div>
+        </div>
+        <div class="agent-tags">
+          <span class="agent-tag">Leave</span>
+          <span class="agent-tag">Benefits</span>
+          <span class="agent-tag">Conduct</span>
+          <span class="agent-tag">Payroll</span>
+        </div>
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="welcome" id="welcome">
+          <div class="welcome-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M9 12h6M9 16h6M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"
+              />
+            </svg>
+          </div>
+          <h2>How can I help you today?</h2>
+          <p>
+            Ask me anything about Upperlink's HR policies — leave entitlements,
+            attendance, benefits, probation, code of conduct, and more.
+          </p>
+          <div class="quick-prompts">
+            <button class="quick-prompt" onclick="useSuggestion(this)">
+              How many annual leave days do I get?
+            </button>
+            <button class="quick-prompt" onclick="useSuggestion(this)">
+              What is the probation period?
+            </button>
+            <button class="quick-prompt" onclick="useSuggestion(this)">
+              How do I apply for paternity leave?
+            </button>
+            <button class="quick-prompt" onclick="useSuggestion(this)">
+              What are the medical benefits?
+            </button>
+            <button class="quick-prompt" onclick="useSuggestion(this)">
+              What is the remote work policy?
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <div class="input-wrap">
+          <textarea
+            id="input"
+            placeholder="Ask about HR policies..."
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button
+            class="send-btn"
+            id="sendBtn"
+            onclick="sendMessage()"
+            aria-label="Send message"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          </button>
+        </div>
+        <p class="input-hint">
+          Press <strong>Enter</strong> to send &nbsp;·&nbsp;
+          <strong>Shift + Enter</strong> for a new line
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const WEBHOOK_URL = "https://benedict-n8n.duckdns.org/webhook/hr-bot";
+      const SESSION_ID = "user-" + Math.random().toString(36).substr(2, 9);
+
+      const messagesEl = document.getElementById("messages");
+      const inputEl = document.getElementById("input");
+      const sendBtn = document.getElementById("sendBtn");
+      let isLoading = false;
+      let dateAdded = false;
+
+      function autoResize(el) {
+        el.style.height = "auto";
+        el.style.height = Math.min(el.scrollHeight, 120) + "px";
+      }
+
+      function handleKey(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function useSuggestion(btn) {
+        inputEl.value = btn.textContent;
+        autoResize(inputEl);
+        sendMessage();
+      }
+
+      function removeWelcome() {
+        const w = document.getElementById("welcome");
+        if (w) w.remove();
+      }
+
+      function addDateDivider() {
+        const d = document.createElement("div");
+        d.className = "date-divider";
+        const now = new Date();
+        d.textContent = now.toLocaleDateString("en-NG", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        });
+        messagesEl.appendChild(d);
+      }
+
+      // ── Section detection and rendering ──
+      function parseSections(text) {
+        // Match "6.1 Title Body text 6.2 Title Body text ..."
+        const pattern = /(\d+\.\d+)\s+([A-Z][^]*?)(?=\d+\.\d+\s+[A-Z]|$)/g;
+        const matches = [...text.matchAll(pattern)];
+        return matches.length >= 2 ? matches : null;
+      }
+
+      function renderSections(text, bubble) {
+        const pattern = /(\d+\.\d+)\s+([A-Z][^]*?)(?=\d+\.\d+\s+[A-Z]|$)/g;
+        const matches = [...text.matchAll(pattern)];
+        const firstIdx = matches[0]?.index ?? 0;
+        const intro = text.slice(0, firstIdx).trim();
+
+        if (intro) {
+          const p = document.createElement("div");
+          p.className = "section-intro";
+          p.textContent = intro;
+          bubble.appendChild(p);
+        }
+
+        const list = document.createElement("div");
+        list.className = "section-list";
+
+        matches.forEach((match) => {
+          const num = match[1];
+          const content = match[2].trim();
+
+          // First line / short phrase = title, rest = body
+          const newlineIdx = content.indexOf("\n");
+          // Try split on two or more spaces, or newline
+          const splitMatch = content.match(/^(.+?)(?:\s{2,}|\n)(.+)$/s);
+          let title = content;
+          let body = "";
+          if (splitMatch) {
+            title = splitMatch[1].trim();
+            body = splitMatch[2].trim();
+          }
+
+          const item = document.createElement("div");
+          item.className = "section-item";
+
+          const numEl = document.createElement("div");
+          numEl.className = "section-num";
+          numEl.textContent = num;
+
+          const titleEl = document.createElement("div");
+          titleEl.className = "section-title";
+          titleEl.textContent = title;
+
+          item.appendChild(numEl);
+          item.appendChild(titleEl);
+
+          if (body) {
+            const bodyEl = document.createElement("div");
+            bodyEl.className = "section-body";
+            bodyEl.textContent = body;
+            item.appendChild(bodyEl);
+          }
+
+          list.appendChild(item);
+        });
+
+        bubble.appendChild(list);
+      }
+
+      function addMessage(text, type) {
+        removeWelcome();
+        if (!dateAdded) {
+          addDateDivider();
+          dateAdded = true;
+        }
+
+        const row = document.createElement("div");
+        row.className = `msg-row ${type}`;
+
+        const av = document.createElement("div");
+        av.className = "msg-avatar-sm";
+        av.innerHTML =
+          type === "user"
+            ? `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`
+            : `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10h8M8 14h5"/></svg>`;
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble" + (type === "error" ? " error" : "");
+
+        if (type === "bot" && parseSections(text)) {
+          renderSections(text, bubble);
+        } else {
+          bubble.textContent = text;
+        }
+
+        row.appendChild(av);
+        row.appendChild(bubble);
+        messagesEl.appendChild(row);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        return bubble;
+      }
+
+      function addTyping() {
+        removeWelcome();
+        if (!dateAdded) {
+          addDateDivider();
+          dateAdded = true;
+        }
+
+        const row = document.createElement("div");
+        row.className = "msg-row bot";
+        row.id = "typing";
+
+        const av = document.createElement("div");
+        av.className = "msg-avatar-sm";
+        av.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10h8M8 14h5"/></svg>`;
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
+
+        row.appendChild(av);
+        row.appendChild(bubble);
+        messagesEl.appendChild(row);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function removeTyping() {
+        const t = document.getElementById("typing");
+        if (t) t.remove();
+      }
+
+      async function sendMessage() {
+        const text = inputEl.value.trim();
+        if (!text || isLoading) return;
+
+        isLoading = true;
+        sendBtn.disabled = true;
+        inputEl.value = "";
+        inputEl.style.height = "auto";
+
+        addMessage(text, "user");
+        addTyping();
+
+        try {
+          const res = await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text, sessionId: SESSION_ID }),
+          });
+
+          removeTyping();
+          if (!res.ok) throw new Error("Server error " + res.status);
+
+          const data = await res.json();
+          const reply = data.response || "No response received.";
+          addMessage(reply, "bot");
+        } catch (err) {
+          removeTyping();
+          addMessage(
+            "I couldn't reach the HR knowledge base right now. Please try again shortly.",
+            "error",
+          );
+          console.error(err);
+        }
+
+        isLoading = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    </script>
+  </body>
+</html>
